@@ -32,32 +32,38 @@ class App extends Component {
 
  // componentDidMount is called when the App component is first rendered on the page. The setTimeout waits 3 seconds and then adds a new message from Michelle to the list of messages.
 
-  componentDidMount() {
-   console.log("componentDidMount <App />");
-   setTimeout(() => {
-     console.log("Simulating incoming message");
-     // Add a new message to the list of messages in the data store
-     const newMessage = {id: 3, username: "Michelle", content: "Hello there!"};
-     const messages = this.state.messages.concat(newMessage)
-     // Update the state of the app component.
-     // Calling setState will trigger a call to render() in App and all child components.
-     this.setState({messages: messages})
-   }, 3000);
- }
+ //  componentDidMount() {
+ //   console.log("componentDidMount <App />");
+ //   setTimeout(() => {
+ //     console.log("Simulating incoming message");
+ //     // Add a new message to the list of messages in the data store
+ //     const newMessage = {id: 3, username: "Michelle", content: "Hello there!"};
+ //     const messages = this.state.messages.concat(newMessage)
+ //     // Update the state of the app component.
+ //     // Calling setState will trigger a call to render() in App and all child components.
+ //     this.setState({messages: messages})
+ //   }, 3000);
+ // }
 
 
-// function that should receive the message typed in Chatbar
+// function that should receive the message typed in Chatbar and adds it to the database
+// on event call the function (get the message)
 
-submitUsername (event) {
-  const username = event.target.value;
-  this.props.changeUsername(username);
+submitMessage = (message) => {
+  // define messages
+  // console.log(this.state)
+  let messages = this.state.messages
+  // set up object that receives new message
+  console.log(messages);
+  const newMessage = {
+    username: "Bob",
+    content: message
+  }
+  //push new messages into messages array
+  messages.push(newMessage)
+  // have the new state reflect the message
+  this.setState({messages: messages})
 }
-
-submitContent (event) {
-  const message = event.target.value;
-  this.props.changeContent(message);
-}
-
 
 
   render() {
@@ -72,9 +78,9 @@ submitContent (event) {
         </nav>
 
         <MessageList messages={this.state.messages}/>
-        <Chatbar currentUser={this.state.currentUser.name}  />
+        <Chatbar currentUser={this.state.currentUser.name} submitMessage={this.submitMessage} />
 
-    </div>
+      </div>
     )
   }
 }

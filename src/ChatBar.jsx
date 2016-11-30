@@ -6,12 +6,13 @@ class Chatbar extends Component {
     super(props);
     // sets up the default state for th app
     this.state = {
-      username: '',
+      username: this.props.username || '',
       content: ''
     }
 
-  }
+  // this.changeContent = this.changeContent.bind(this);
 
+  }
 
   changeUsername (event) {
     this.setState({
@@ -20,20 +21,39 @@ class Chatbar extends Component {
     })
   }
 
-  changeContent(event) {
-    this.setState({
-      //event.target is the element receiving our change, i.e. the input
-    content: event.target.value,
-    })
+
+
+  //changeContent calls function submitMessage in App.jsx
+  changeContent = (event) => {
+      if (event.key === 'Enter') {
+      this.props.submitMessage(event.target.value)
+      // this.props.submitMessage(this.state.content)
+    }
+  }
+
+handleKeyPress = (event) => {
+  if (event.key === 13) {
+    this.setState(
+      this.state.username,
+      this.state.content
+    )
+  }
+}
+
+
+onChange = (event) => {
+  this.setState({content: event.target.value})
   }
 
 
-  //when I enter info the callback in App is called
+
+
 
   render() {
   // console.log("Rendering <Chatbar/>")
+  // console.log(this.props.submitMessage)
 
-  var {currentUser} = this.props
+  const {currentUser} = this.props
 
   // console.log(this.props)
 
@@ -44,18 +64,21 @@ class Chatbar extends Component {
         <input
           id='username'
           type='text'
-          placeholder={currentUser}
-          value={this.state.username}
-          // calls the changeMessage function
-          onKeyPress={this.submitUsername} />
+          placeholder= {currentUser}
+          value={currentUser}
+          onChange={this.changeUsername}
+
+        />
 
         <input
           id='new-message'
           type='text'
           placeholder='Type a message and hit ENTER'
-          value={this.state.content}
+          defaultValue={this.state.content}
           // calls the changeMessage function
-          onKeyPress={this.submitContent} />
+          onChange={this.onChange}
+          onKeyPress={this.changeContent}
+        />
 
       </footer>
     )
