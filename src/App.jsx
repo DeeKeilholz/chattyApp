@@ -13,7 +13,8 @@ class App extends Component {
             currentUser: {
                 name: 'Anonymous'
             },
-            messages: []
+            messages: [],
+            users: 0
             // messages coming from the server will be stored here as they arrive
         }
     }
@@ -33,16 +34,34 @@ class App extends Component {
         this.webSocket.onmessage = (server) => {
 
             var serverData = JSON.parse(server.data)
-            // switch(serverData.type) {
-            //   case "incomingMessage":
-            //   // handle incoming message
-            //   break;
-            //   case "incomingNotification"
-            // }
-            var messages = this.state.messages
-            //push messages received from server into messages array
-            messages.push(serverData)
-            this.setState({messages: messages})
+            console.log("the type is:", serverData.type);
+            console.log(serverData);
+            switch (serverData.type) {
+
+                case "incomingMessage":
+                    // handle incoming message
+                    var messages = this.state.messages
+                    //push messages received from server into messages array
+                    messages.push(serverData)
+                    this.setState({messages: messages})
+                    break;
+
+                case "incomingNotification":
+                    const notification = this.state.messages
+                    messages.push(serverData)
+                    this.setState({messages: notification})
+                    break;
+
+                    console.log("Data from Server w Notification:", serverData)
+
+                case "counter":
+                    this.setState({users: serverData.count})
+                    break;
+
+                default:
+                    //show an error in the conosle
+                    throw new Error("Unknown event type", serverData.type)
+            }
 
             console.log("Message received from server:", messages)
 
@@ -50,11 +69,24 @@ class App extends Component {
 
     }
 
+    // sends new username to server
     changeUsername = (username) => {
+        const oldUsername = this.state.currentUser.name
         const currentUser = {
             name: username
         }
         this.setState({currentUser})
+
+        if (currentUser === username) {} else {
+            const notification = {
+                type: "postNotification",
+                content: `${oldUsername} has changed their name to ${currentUser.name}`
+            }
+
+            // sending new username to server
+            const stringUsername = JSON.stringify(notification);
+            this.webSocket.send(stringUsername);
+        }
     }
 
     // function that receveives the message typed in Chatbar and adds it to the database
@@ -76,7 +108,6 @@ class App extends Component {
         const stringMessage = JSON.stringify(newMessage);
         this.webSocket.send(stringMessage);
 
-
         console.log("Message sent to server", stringMessage)
     }
 
@@ -84,10 +115,13 @@ class App extends Component {
 
         return (
             <div className="wrapper">
-                <nav>
-                    <h1>
-                        {this.state.title}
-                    </h1>
+              <nav>
+                <h1>
+                  {this.state.title}
+                </h1>
+                <p>
+                  {this.state.users} users online
+                    </p>
                 </nav>
                 <MessageList messages={this.state.messages}/>
                 <Chatbar currentUser={this.state.currentUser.name} submitMessage={this.submitMessage} sendNewMessage={this.sendNewMessage} changeUsername={this.changeUsername}/>

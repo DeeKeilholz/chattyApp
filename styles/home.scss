@@ -13,6 +13,8 @@ html, body {
 }
 
 nav {
+  display: flex;
+  justify-content: space-between;
   height: 40px;
   padding: 8px;
   border-bottom: 1px solid black;
@@ -22,6 +24,9 @@ nav {
 nav h1 {
   margin: 0;
 }
+
+
+
 
 #message-list {
   height: calc(100vh - 131px);

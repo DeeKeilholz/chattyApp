@@ -9,23 +9,22 @@ import React, {Component} from 'react';
   Anonymous1 changed their name to nomnom.
 </div> */
 
-
 class Message extends Component {
 
-  render() {
-  console.log("Rendering <Message/>")
+    render() {
+        console.log("Rendering <Message/>")
 
-    return (
+        return (
 
-    <div className='message'>
+            <div className='message'>
 
-      <div className='username'>{this.props.username}</div>
-      <div className='content'>{this.props.content}</div>
+                <div className='username'>{this.props.username}</div>
+                <div className='content'>{this.props.content}</div>
 
-    </div>
+            </div>
 
-    )
-  }
+        )
+    }
 }
 
 export default Message;
