@@ -34,8 +34,8 @@ class App extends Component {
         this.webSocket.onmessage = (server) => {
 
             var serverData = JSON.parse(server.data)
-            console.log("the type is:", serverData.type);
-            console.log(serverData);
+            // console.log("the type is:", serverData.type);
+            // console.log(serverData);
             switch (serverData.type) {
 
                 case "incomingMessage":
@@ -51,8 +51,8 @@ class App extends Component {
                     messages.push(serverData)
                     this.setState({messages: notification})
                     break;
-
-                    console.log("Data from Server w Notification:", serverData)
+                    //
+                    // console.log("Data from Server w Notification:", serverData)
 
                 case "counter":
                     this.setState({users: serverData.count})
@@ -63,7 +63,7 @@ class App extends Component {
                     throw new Error("Unknown event type", serverData.type)
             }
 
-            console.log("Message received from server:", messages)
+            // console.log("Message received from server:", messages)
 
         }
 
@@ -108,7 +108,7 @@ class App extends Component {
         const stringMessage = JSON.stringify(newMessage);
         this.webSocket.send(stringMessage);
 
-        console.log("Message sent to server", stringMessage)
+        // console.log("Message sent to server", stringMessage)
     }
 
     render() {
